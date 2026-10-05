@@ -1,124 +1,396 @@
+import { useEffect, useState } from "react";
+
 const TeacherMessage = ({ onBack, onNext }) => {
+  const [visible, setVisible] = useState(false);
+  const [typedLength, setTypedLength] = useState(0);
+
+  const paragraphs = [
+    "Thank you for being more than just a teacher — you are a mentor, a guide, and an inspiration to every student who walks into your classroom.",
+    "Your dedication to the field of English has shaped our minds, sharpened our expression, and taught us to think beyond the text. You make learning feel like a journey worth taking.",
+    "On this Teacher's Day, we celebrate you — your patience, your passion, and the countless hours you invest in helping us grow. You truly are one of a kind.",
+  ];
+
+  const fullText = paragraphs.join(" ");
+
+  // Entrance animation trigger
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 60);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Typing animation for the body (fast, skippable)
+  useEffect(() => {
+    if (typedLength < fullText.length) {
+      const timeout = setTimeout(() => {
+        setTypedLength((prev) => prev + 2);
+      }, 18);
+      return () => clearTimeout(timeout);
+    }
+  }, [typedLength, fullText]);
+
+  const handleSkipTyping = () => setTypedLength(fullText.length);
+  const isTypingDone = typedLength >= fullText.length;
+
+  // Derive partial text for the three paragraphs based on typedLength
+  let remaining = typedLength;
+  const renderedParagraphs = paragraphs.map((p) => {
+    if (remaining <= 0) return "";
+    if (remaining >= p.length) {
+      remaining -= p.length + 1; // +1 for space join
+      return p;
+    }
+    const partial = p.slice(0, remaining);
+    remaining = 0;
+    return partial;
+  });
+
   return (
-    <div className="min-h-screen flex justify-center items-center bg-linear-to-br from-pink-100 via-pink-50 to-white p-4 font-sans">
-      {/* Card */}
-      <div className="relative w-full max-w-2xl bg-white rounded-4xl shadow-[0_20px_35px_-8px_rgba(179,65,111,0.25),0_10px_15px_-6px_rgba(179,65,111,0.15)] border border-pink-100 px-8 py-12 text-center overflow-hidden">
-        {/* Top accent bar */}
-        <div className="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-rose-700 via-pink-200 to-white"></div>
+    <div className="relative min-h-screen flex justify-center items-center bg-[#6b0f1e] px-3 py-6 sm:px-4 sm:py-8 font-sans overflow-hidden">
+      {/* ==================== ANIMATED DECORATIVE LAYER ==================== */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        {/* Soft glowing rose blobs for depth */}
+        <div className="absolute -top-40 -left-40 w-105 h-105 sm:w-130 sm:h-130 rounded-full bg-[#b14b5e]/25 blur-3xl animate-blob-slow" />
+        <div className="absolute -bottom-40 -right-40 w-105 h-105 sm:w-130 sm:h-130 rounded-full bg-[#8b1e2b]/40 blur-3xl animate-blob-slower" />
 
-        {/* Decorative floating elements */}
-        <span className="absolute top-6 left-8 text-3xl opacity-20 -rotate-12 select-none pointer-events-none">
-          💌
-        </span>
-        <span className="absolute top-20 right-8 text-2xl opacity-20 rotate-12 select-none pointer-events-none">
-          ✨
-        </span>
-        <span className="absolute bottom-8 left-10 text-3xl opacity-20 rotate-6 select-none pointer-events-none">
-          🌸
-        </span>
-        <span className="absolute bottom-6 right-8 text-3xl opacity-20 -rotate-12 select-none pointer-events-none">
-          🌷
-        </span>
+        {/* Fine dot grid in light wine tone */}
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 1px 1px, #f5e1e5 1px, transparent 0)",
+            backgroundSize: "26px 26px",
+          }}
+        />
 
-        {/* Small envelope icon on top */}
-        <div className="w-20 h-20 rounded-full bg-pink-100 flex justify-center items-center mx-auto mb-5 border-4 border-white shadow-[0_12px_20px_-8px_rgba(179,65,111,0.25)]">
-          <span className="text-4xl">💐</span>
-        </div>
+        {/* Subtle radial vignette (darker corners) */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.35)_100%)]" />
 
-        {/* Heading */}
-        <h1 className="text-rose-700 text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-2">
-          A Message for You
-        </h1>
-
-        {/* Subheading */}
-        <p className="text-rose-700/70 text-base md:text-lg font-medium mb-6">
-          To Miss. Ayesha Arain — Software Engineering
-        </p>
-
-        {/* Divider */}
-        <div className="w-20 h-1 bg-linear-to-r from-rose-700 to-pink-200 rounded-full mx-auto mb-8"></div>
-
-        {/* Message card */}
-        <div className="bg-pink-100 rounded-3xl p-6 md:p-8 text-left text-rose-700 text-base md:text-lg leading-relaxed shadow-[inset_0_0_0_1px_#fff,0_6px_12px_-6px_rgba(179,65,111,0.3)] border-l-8 border-rose-700 space-y-4">
-          <p className="font-semibold text-xl md:text-2xl not-italic">
-            Dear Miss Arain,
-          </p>
-          <p className="italic">
-            Thank you for being more than just a teacher — you are a mentor, a
-            guide, and an inspiration to every student who walks into your
-            classroom.
-          </p>
-          <p className="italic">
-            Your dedication to the field of Software Engineering has shaped our
-            minds, sharpened our skills, and taught us to think beyond the code.
-            You make learning feel like a journey worth taking.
-          </p>
-          <p className="italic">
-            On this Teacher's Day, we celebrate you — your patience, your
-            passion, and the countless hours you invest in helping us grow. You
-            truly are one of a kind.
-          </p>
-          <p className="not-italic font-semibold text-right pt-2">
-            With love and gratitude, <br />
-            Your Students 💖
-          </p>
-        </div>
-
-        {/* Footer note */}
-        <div className="flex justify-center items-center gap-3 mt-8 text-rose-700 text-sm font-medium opacity-90 flex-wrap">
-          <span className="text-lg">🌹</span>
-          <span>Happy Teacher's Day, Miss Arain</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-rose-700 opacity-50"></span>
-          <span className="text-lg">💐</span>
-        </div>
-
-        {/* Buttons */}
-        <div className="mt-10 flex justify-center items-center gap-4 flex-wrap">
-          {/* Back Button */}
-          <button
-            onClick={onBack}
-            className="group inline-flex items-center gap-2 bg-white border-2 border-rose-700 text-rose-700 hover:bg-pink-100 font-semibold text-lg px-7 py-3 rounded-full transition-all duration-300 ease-in-out hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-pink-200"
+        {/* Drifting sparkles in soft blush */}
+        {[...Array(8)].map((_, i) => (
+          <span
+            key={i}
+            className="absolute text-[#f5e1e5]/25 select-none animate-drift"
+            style={{
+              left: `${(i * 15 + 5) % 100}%`,
+              top: `${(i * 23 + 9) % 100}%`,
+              fontSize: `${0.9 + (i % 3) * 0.5}rem`,
+              animationDelay: `${i * 0.8}s`,
+              animationDuration: `${9 + (i % 4)}s`,
+            }}
           >
-            <svg
-              className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-300"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-              />
-            </svg>
-            <span>Back</span>
-          </button>
+            {["✦", "✧", "·", "❋"][i % 4]}
+          </span>
+        ))}
+      </div>
 
-          {/* Next Button */}
-          <button
-            onClick={onNext}
-            className="group inline-flex items-center gap-2 bg-rose-700 hover:bg-rose-800 text-white font-semibold text-lg px-8 py-3 rounded-full shadow-[0_10px_20px_-8px_rgba(179,65,111,0.6)] hover:shadow-[0_14px_24px_-8px_rgba(179,65,111,0.75)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-pink-200"
-          >
-            <span>Next</span>
-            <svg
-              className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+      {/* ==================== MAIN CARD ==================== */}
+      <div
+        className={`relative w-full max-w-2xl z-10 transition-all duration-1000 ease-out ${
+          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}
+      >
+        {/* Soft blush glow behind the card */}
+        <div className="absolute -inset-1 bg-linear-to-r from-[#b14b5e]/40 via-[#f5e1e5]/20 to-[#b14b5e]/40 rounded-[2.5rem] blur-2xl opacity-70 animate-glow-pulse" />
+
+        {/* White card (solid, warm off-white) */}
+        <div className="relative bg-[#fdf6f7] rounded-4xl sm:rounded-[2.5rem] border border-[#f5e1e5]/40 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)] px-5 py-9 sm:px-8 sm:py-12 text-center overflow-hidden">
+          {/* Animated top accent bar */}
+          <div className="absolute top-0 left-0 w-full h-1.5 top-accent-bar animate-shimmer" />
+
+          {/* Decorative floating elements */}
+          <span className="absolute top-5 left-5 sm:top-6 sm:left-8 text-2xl sm:text-3xl opacity-25 select-none pointer-events-none animate-float-1">
+            💌
+          </span>
+          <span className="absolute top-16 right-5 sm:top-20 sm:right-8 text-xl sm:text-2xl opacity-25 select-none pointer-events-none animate-float-2">
+            ✨
+          </span>
+          <span className="absolute bottom-6 left-6 sm:bottom-8 sm:left-10 text-2xl sm:text-3xl opacity-25 select-none pointer-events-none animate-float-3">
+            🌸
+          </span>
+          <span className="absolute bottom-5 right-5 sm:bottom-6 sm:right-8 text-2xl sm:text-3xl opacity-25 select-none pointer-events-none animate-float-4">
+            🌷
+          </span>
+
+          {/* Header icon with rotating ring */}
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-5">
+            <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,#6b0f1e,#b14b5e,#f5e1e5,#6b0f1e)] animate-spin-slow opacity-50 blur-sm" />
+            <div className="relative w-full h-full rounded-full bg-[#f7e9ec] flex justify-center items-center border-4 border-white shadow-wine-md">
+              <span className="text-3xl sm:text-4xl animate-heartbeat">💐</span>
+            </div>
+          </div>
+
+          {/* Heading with animated gradient */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight mb-2 bg-linear-to-r from-[#6b0f1e] via-[#8b1e2b] to-[#6b0f1e] bg-clip-text text-transparent animate-gradient-x">
+            A Message for You
+          </h1>
+
+          {/* Subheading */}
+          <p className="text-[#8b3e4b] text-sm sm:text-base md:text-lg font-medium mb-5 sm:mb-6 tracking-wide px-2">
+            To Miss Noor-ul-huda Brohi — English Department
+          </p>
+
+          {/* Animated divider with sliding dot */}
+          <div className="relative w-32 sm:w-40 h-1 rounded-full mx-auto mb-7 sm:mb-8 bg-linear-to-r from-transparent via-[#6b0f1e] to-transparent overflow-hidden">
+            <div className="absolute inset-0 bg-[#b14b5e]/60 animate-slide-dot" />
+          </div>
+
+          {/* Message card with animated border and typing effect */}
+          <div className="relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 text-left text-[#4a1e24] text-sm sm:text-base md:text-lg leading-relaxed shadow-[0_10px_24px_-12px_rgba(107,15,30,0.25)] border-l-[6px] sm:border-l-8 border-[#6b0f1e] space-y-3 sm:space-y-4 overflow-hidden">
+            {/* Animated subtle sheen overlay */}
+            <div className="absolute inset-0 bg-linear-to-tr from-transparent via-white/0 to-transparent animate-sheen pointer-events-none" />
+
+            <p className="relative font-semibold text-lg sm:text-xl md:text-2xl not-italic text-[#6b0f1e] animate-fadeIn">
+              Dear Miss Noor-ul-huda Brohi,
+            </p>
+
+            {renderedParagraphs.map((text, i) => (
+              <p
+                key={i}
+                className={`relative italic transition-opacity duration-500 ${
+                  text.length > 0 ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                {text}
+                {/* Blinking cursor on the last active paragraph */}
+                {!isTypingDone &&
+                  text.length > 0 &&
+                  i ===
+                    renderedParagraphs.findLastIndex((t) => t.length > 0) && (
+                    <span className="inline-block w-0.5 h-4 sm:h-5 bg-[#6b0f1e] ml-0.5 animate-pulse align-middle" />
+                  )}
+              </p>
+            ))}
+
+            {/* Signature — appears after typing completes */}
+            <p
+              className={`not-italic font-semibold text-right pt-2 text-[#6b0f1e] transition-all duration-700 ${
+                isTypingDone
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-2"
+              }`}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-              />
-            </svg>
-          </button>
+              With love and gratitude, <br />
+              Your Students 💖
+            </p>
+
+            {/* Skip typing button */}
+            {!isTypingDone && (
+              <button
+                onClick={handleSkipTyping}
+                className="absolute bottom-2 right-3 sm:bottom-3 sm:right-4 text-[#8b3e4b] hover:text-[#6b0f1e] text-[10px] sm:text-xs font-semibold tracking-wide underline decoration-dotted transition-colors duration-200"
+              >
+                Skip ⏭
+              </button>
+            )}
+
+            {/* Decorative quote mark */}
+            <div className="absolute -top-1 -right-1 text-[#6b0f1e]/10 text-5xl sm:text-6xl font-serif select-none pointer-events-none">
+              ”
+            </div>
+          </div>
+
+          {/* Footer note */}
+          <div className="flex justify-center items-center gap-2 sm:gap-3 mt-6 sm:mt-8 text-[#6b0f1e] text-xs sm:text-sm font-medium opacity-90 flex-wrap text-center">
+            <span className="text-base sm:text-lg animate-heartbeat">🌹</span>
+            <span>Happy Teacher's Day, Miss Noor-ul-huda Brohi</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#6b0f1e] opacity-50" />
+            <span
+              className="text-base sm:text-lg animate-heartbeat"
+              style={{ animationDelay: "0.4s" }}
+            >
+              💐
+            </span>
+          </div>
+
+          {/* Buttons — stacked on tiny screens, side-by-side from sm up */}
+          <div className="mt-8 sm:mt-10 flex flex-col-reverse sm:flex-row justify-center items-stretch sm:items-center gap-3 sm:gap-4">
+            {/* Back Button */}
+            <button
+              onClick={onBack}
+              className="group relative overflow-hidden inline-flex justify-center items-center gap-2 bg-white border-2 border-[#6b0f1e] text-[#6b0f1e] font-semibold text-base sm:text-lg px-6 sm:px-7 py-3 rounded-full transition-all duration-300 ease-in-out hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-[#b14b5e]/30"
+            >
+              <span className="absolute inset-0 bg-[#6b0f1e]/0 group-hover:bg-[#6b0f1e]/5 transition-colors duration-300" />
+              <svg
+                className="relative w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-300"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                />
+              </svg>
+              <span className="relative">Back</span>
+            </button>
+
+            {/* Next Button */}
+            <button
+              onClick={onNext}
+              className="group relative overflow-hidden inline-flex justify-center items-center gap-2 bg-[#6b0f1e] hover:bg-[#8b1e2b] text-white font-semibold text-base sm:text-lg px-7 sm:px-8 py-3 rounded-full shadow-wine-md hover:shadow-wine-lg transition-all duration-300 ease-in-out hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-[#b14b5e]/40"
+            >
+              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-linear-to-r from-transparent via-white/25 to-transparent" />
+              <span className="relative">Next</span>
+              <svg
+                className="relative w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Keyframes & utilities */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap');
+        .font-sans { font-family: 'Inter', system-ui, sans-serif; }
+
+        /* Floating emoji paths */
+        @keyframes float1 {
+          0%, 100% { transform: translateY(0) rotate(-12deg); }
+          50% { transform: translateY(-12px) rotate(-6deg); }
+        }
+        @keyframes float2 {
+          0%, 100% { transform: translateY(0) rotate(12deg); }
+          50% { transform: translateY(-14px) rotate(18deg); }
+        }
+        @keyframes float3 {
+          0%, 100% { transform: translateY(0) rotate(6deg); }
+          50% { transform: translateY(-10px) rotate(0deg); }
+        }
+        @keyframes float4 {
+          0%, 100% { transform: translateY(0) rotate(-12deg); }
+          50% { transform: translateY(-16px) rotate(-4deg); }
+        }
+        .animate-float-1 { animation: float1 6s ease-in-out infinite; }
+        .animate-float-2 { animation: float2 7s ease-in-out infinite; }
+        .animate-float-3 { animation: float3 5.5s ease-in-out infinite; }
+        .animate-float-4 { animation: float4 8s ease-in-out infinite; }
+
+        /* Slow spin */
+        @keyframes spinSlow { to { transform: rotate(360deg); } }
+        .animate-spin-slow { animation: spinSlow 9s linear infinite; }
+
+        /* Heartbeat */
+        @keyframes heartbeat {
+          0%, 100% { transform: scale(1); }
+          25% { transform: scale(1.15); }
+          40% { transform: scale(0.95); }
+          60% { transform: scale(1.1); }
+        }
+        .animate-heartbeat { animation: heartbeat 2.4s ease-in-out infinite; }
+
+        /* Gradient text */
+        @keyframes gradientX {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .animate-gradient-x {
+          background-size: 200% 200%;
+          animation: gradientX 5s ease infinite;
+        }
+
+        /* Sliding dot */
+        @keyframes slideDot {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        .animate-slide-dot { animation: slideDot 2.5s ease-in-out infinite; }
+
+        /* Shimmer on top bar */
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        .animate-shimmer {
+          background-size: 200% 100%;
+          animation: shimmer 4s linear infinite;
+        }
+
+        /* Blob movement */
+        @keyframes blobSlow {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(30px, -40px) scale(1.1); }
+          66% { transform: translate(-20px, 30px) scale(0.95); }
+        }
+        @keyframes blobSlower {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(-40px, 30px) scale(1.08); }
+        }
+        .animate-blob-slow { animation: blobSlow 16s ease-in-out infinite; }
+        .animate-blob-slower { animation: blobSlower 20s ease-in-out infinite; }
+
+        /* Drifting sparkles */
+        @keyframes drift {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.15; }
+          50% { transform: translate(20px, -30px) rotate(180deg); opacity: 0.35; }
+        }
+        .animate-drift { animation: drift linear infinite; }
+
+        /* Glow behind card */
+        @keyframes glowPulse {
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50% { opacity: 0.85; transform: scale(1.02); }
+        }
+        .animate-glow-pulse { animation: glowPulse 5s ease-in-out infinite; }
+
+        /* Sheen on message card */
+        @keyframes sheen {
+          0%, 100% { background-position: 200% 0; opacity: 0.4; }
+          50% { background-position: -50% 0; opacity: 0.7; }
+        }
+        .animate-sheen {
+          background: linear-gradient(
+            115deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.55) 50%,
+            transparent 70%
+          );
+          background-size: 200% 100%;
+          animation: sheen 6s ease-in-out infinite;
+        }
+
+        /* Fade in */
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn { animation: fadeIn 0.9s ease-out both; }
+
+        /* Shadows */
+        .shadow-wine-sm { box-shadow: 0 6px 14px -6px rgba(107, 15, 30, 0.15); }
+        .shadow-wine-md { box-shadow: 0 12px 24px -10px rgba(107, 15, 30, 0.2); }
+        .shadow-wine-lg {
+          box-shadow: 0 24px 38px -12px rgba(107, 15, 30, 0.3),
+                      0 6px 18px -8px rgba(107, 15, 30, 0.2);
+        }
+
+        .top-accent-bar {
+          background: linear-gradient(90deg, #6b0f1e 0%, #b14b5e 50%, #f5e1e5 100%);
+        }
+
+        /* Reduce motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+          * {
+            animation-duration: 0.001ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };
